@@ -33,7 +33,7 @@ Built with **HTML · CSS · JavaScript** on the frontend and **Python Flask + SQ
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/subscription-tracker.git
+git clone https://github.com/Rakshan07120/subscription-tracker.git
 cd subscription-tracker
 ```
 
