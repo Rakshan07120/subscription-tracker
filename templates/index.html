@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SubTrack — Subscription Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="navbar-brand">
+            <span class="brand-icon">◈</span>
+            <span class="brand-name">SubTrack</span>
+        </div>
+        <nav class="navbar-links">
+            <a href="#" class="nav-link active">Dashboard</a>
+            <a href="#" class="nav-link">Analytics</a>
+        </nav>
+        <button class="btn btn-primary" id="add-btn">+ Add Subscription</button>
+    </header>
+
+    <main class="main">
+        <!-- Summary cards -->
+        <section class="summary-grid">
+            <div class="summary-card">
+                <p class="summary-label">Monthly Spend</p>
+                <p class="summary-value" id="monthly-total">₹0</p>
+            </div>
+            <div class="summary-card">
+                <p class="summary-label">Active Subscriptions</p>
+                <p class="summary-value" id="active-count">0</p>
+            </div>
+            <div class="summary-card">
+                <p class="summary-label">Renewing Soon</p>
+                <p class="summary-value" id="renewing-soon">0</p>
+            </div>
+            <div class="summary-card">
+                <p class="summary-label">Yearly Spend</p>
+                <p class="summary-value" id="yearly-total">₹0</p>
+            </div>
+        </section>
+
+        <!-- Subscription list -->
+        <section class="list-section">
+            <div class="list-header">
+                <h2 class="list-title">Your Subscriptions</h2>
+            </div>
+            <div class="subscription-list" id="subscription-list">
+                <!-- Populated by app.js -->
+                <div class="empty-state">
+                    <p class="empty-icon">◈</p>
+                    <p class="empty-title">No subscriptions yet</p>
+                    <p class="empty-sub">Add your first subscription to get started</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
