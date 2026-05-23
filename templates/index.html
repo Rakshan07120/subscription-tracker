@@ -4,58 +4,208 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SubTrack — Subscription Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
+    <!-- ── Navbar ─────────────────────────────────────────── -->
     <header class="navbar">
         <div class="navbar-brand">
-            <span class="brand-icon">◈</span>
+            <div class="brand-logo">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <rect x="1" y="1" width="9" height="9" rx="2" fill="var(--accent)"/>
+                    <rect x="12" y="1" width="9" height="9" rx="2" fill="var(--accent)" opacity=".4"/>
+                    <rect x="1" y="12" width="9" height="9" rx="2" fill="var(--accent)" opacity=".4"/>
+                    <rect x="12" y="12" width="9" height="9" rx="2" fill="var(--accent)" opacity=".7"/>
+                </svg>
+            </div>
             <span class="brand-name">SubTrack</span>
         </div>
+
         <nav class="navbar-links">
             <a href="#" class="nav-link active">Dashboard</a>
             <a href="#" class="nav-link">Analytics</a>
+            <a href="#" class="nav-link">Settings</a>
         </nav>
-        <button class="btn btn-primary" id="add-btn">+ Add Subscription</button>
+
+        <button class="btn btn-primary" id="add-btn">
+            <span class="btn-icon">+</span> Add Subscription
+        </button>
     </header>
 
+    <!-- ── Main ───────────────────────────────────────────── -->
     <main class="main">
+
+        <!-- Page title -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-sub" id="current-date"></p>
+            </div>
+            <div class="header-badge">
+                <span class="badge-dot"></span>
+                <span id="active-label">0 active</span>
+            </div>
+        </div>
+
         <!-- Summary cards -->
         <section class="summary-grid">
-            <div class="summary-card">
-                <p class="summary-label">Monthly Spend</p>
-                <p class="summary-value" id="monthly-total">₹0</p>
+            <div class="summary-card card-highlight">
+                <div class="summary-icon">₹</div>
+                <div>
+                    <p class="summary-label">Monthly Spend</p>
+                    <p class="summary-value" id="monthly-total">0</p>
+                </div>
+                <div class="card-glow"></div>
             </div>
             <div class="summary-card">
-                <p class="summary-label">Active Subscriptions</p>
-                <p class="summary-value" id="active-count">0</p>
+                <div class="summary-icon icon-green">↑</div>
+                <div>
+                    <p class="summary-label">Yearly Spend</p>
+                    <p class="summary-value" id="yearly-total">0</p>
+                </div>
             </div>
             <div class="summary-card">
-                <p class="summary-label">Renewing Soon</p>
-                <p class="summary-value" id="renewing-soon">0</p>
+                <div class="summary-icon icon-purple">◈</div>
+                <div>
+                    <p class="summary-label">Subscriptions</p>
+                    <p class="summary-value" id="active-count">0</p>
+                </div>
             </div>
             <div class="summary-card">
-                <p class="summary-label">Yearly Spend</p>
-                <p class="summary-value" id="yearly-total">₹0</p>
-            </div>
-        </section>
-
-        <!-- Subscription list -->
-        <section class="list-section">
-            <div class="list-header">
-                <h2 class="list-title">Your Subscriptions</h2>
-            </div>
-            <div class="subscription-list" id="subscription-list">
-                <!-- Populated by app.js -->
-                <div class="empty-state">
-                    <p class="empty-icon">◈</p>
-                    <p class="empty-title">No subscriptions yet</p>
-                    <p class="empty-sub">Add your first subscription to get started</p>
+                <div class="summary-icon icon-amber">⏰</div>
+                <div>
+                    <p class="summary-label">Renewing Soon</p>
+                    <p class="summary-value" id="renewing-soon">0</p>
                 </div>
             </div>
         </section>
+
+        <!-- Subscription list section -->
+        <section class="list-section">
+            <div class="list-header">
+                <h2 class="list-title">Your Subscriptions</h2>
+                <div class="list-controls">
+                    <div class="search-wrap">
+                        <span class="search-icon">⌕</span>
+                        <input type="text" class="search-input" id="search-input" placeholder="Search...">
+                    </div>
+                    <select class="filter-select" id="filter-category">
+                        <option value="all">All categories</option>
+                        <option value="Streaming">Streaming</option>
+                        <option value="Music">Music</option>
+                        <option value="Cloud">Cloud</option>
+                        <option value="Productivity">Productivity</option>
+                        <option value="Gaming">Gaming</option>
+                        <option value="News">News</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Table header -->
+            <div class="table-header">
+                <span>Service</span>
+                <span>Category</span>
+                <span>Cost</span>
+                <span>Billing</span>
+                <span>Next Renewal</span>
+                <span>Status</span>
+                <span></span>
+            </div>
+
+            <!-- Subscription rows go here -->
+            <div class="subscription-list" id="subscription-list">
+                <!-- Empty state -->
+                <div class="empty-state" id="empty-state">
+                    <div class="empty-graphic">
+                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                            <rect x="8" y="8" width="20" height="20" rx="4" fill="var(--accent)" opacity=".15"/>
+                            <rect x="36" y="8" width="20" height="20" rx="4" fill="var(--accent)" opacity=".08"/>
+                            <rect x="8" y="36" width="20" height="20" rx="4" fill="var(--accent)" opacity=".08"/>
+                            <rect x="36" y="36" width="20" height="20" rx="4" fill="var(--accent)" opacity=".15"/>
+                            <path d="M28 32h8M32 28v8" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <p class="empty-title">No subscriptions yet</p>
+                    <p class="empty-sub">Click <strong>+ Add Subscription</strong> to track your first one</p>
+                </div>
+            </div>
+        </section>
+
     </main>
+
+    <!-- ── Add / Edit Modal ───────────────────────────────── -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Add Subscription</h3>
+                <button class="modal-close" id="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Service Name *</label>
+                        <input type="text" class="form-input" id="f-name" placeholder="e.g. Netflix">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-input" id="f-category">
+                            <option value="Streaming">Streaming</option>
+                            <option value="Music">Music</option>
+                            <option value="Cloud">Cloud</option>
+                            <option value="Productivity">Productivity</option>
+                            <option value="Gaming">Gaming</option>
+                            <option value="News">News</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Cost (₹) *</label>
+                        <input type="number" class="form-input" id="f-cost" placeholder="e.g. 649" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Billing Cycle</label>
+                        <select class="form-input" id="f-billing">
+                            <option value="monthly">Monthly</option>
+                            <option value="yearly">Yearly</option>
+                            <option value="weekly">Weekly</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Next Renewal Date</label>
+                        <input type="date" class="form-input" id="f-renewal">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-input" id="f-status">
+                            <option value="active">Active</option>
+                            <option value="paused">Paused</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <input type="text" class="form-input" id="f-notes" placeholder="Optional notes...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="modal-save">Save Subscription</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Toast notification ─────────────────────────────── -->
+    <div class="toast" id="toast"></div>
 
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
