@@ -1,7 +1,11 @@
 import sqlite3
 import os
 
-DB_PATH     = os.path.join(os.path.dirname(__file__), 'subscriptions.db')
+# On Render the working directory is ephemeral but /tmp survives restarts
+# Locally it just saves next to this file as before
+IS_RENDER = os.environ.get('RENDER', False)
+DB_PATH   = '/tmp/subscriptions.db' if IS_RENDER else os.path.join(os.path.dirname(__file__), 'subscriptions.db')
+
 SCHEMA_PATH = os.path.join(os.path.dirname(__file__), 'schema.sql')
 
 
